@@ -5,13 +5,13 @@ options(HTTPUserAgent = sprintf("R/%s R (%s); r-universe (%s)", rver, paste(rver
 options(repos = c(CRAN = sprintf("https://p3m.dev/cran/__linux__/%s/latest", distro)))
 
 # Enable BioConductor repos
-utils::setRepositories(ind = 1:4, addURLs = c(fallback = "https://cloud.r-project.org", archive = "https://cranhaven.r-universe.dev"))
+utils::setRepositories(addURLs = c(BiocManager::repositories(), fallback = "https://cloud.r-project.org", archive = "https://cranhaven.r-universe.dev"))
 
 # Enable universe repo(s)
 my_universe <- Sys.getenv("MY_UNIVERSE")
 if(nchar(my_universe)){
   my_repos <- trimws(strsplit(my_universe, ';')[[1]])
-  binaries <- sprintf('%s/bin/linux/%s/%s', my_repos[1], distro, substr(rver, 1, 3))
+  binaries <- sprintf('%s/packages/%s/container-binaries/bioconductor_docker/', my_repos[1], BiocManager::version())
   options(repos = c(binaries = binaries, universe = my_repos, getOption("repos")))
 }
 
